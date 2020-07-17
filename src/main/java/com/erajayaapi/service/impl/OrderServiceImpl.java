@@ -1,5 +1,6 @@
 package com.erajayaapi.service.impl;
 
+import com.erajayaapi.dto.OrderRequest;
 import com.erajayaapi.model.Order;
 import com.erajayaapi.repository.OrderRepository;
 import com.erajayaapi.service.OrderService;
@@ -41,22 +42,23 @@ public class OrderServiceImpl implements OrderService {
    public Order saveDataOrder(Order order) {
       order.setCreatedBy("sherlock");
       order.setCreatedDate(new Date());
+      order.setModifiedBy("sherlock");
+      order.setModifiedDate(new Date());
       order.setStatus(true);
 
       return orderRepository.save(order);
    }
 
    @Override
-   public Order updateDataOrder(Long orderId, Order order) {
-      Order orderToEdit = orderRepository.findById(orderId).get();
+   public Order updateDataOrder(Order order) {
 
-      orderToEdit.setModifiedBy("sherlock");
-      orderToEdit.setModifiedDate(new Date());
-      orderToEdit.setInvoiceNumber(order.getInvoiceNumber());
-      orderToEdit.setOrderDescription(order.getOrderDescription());
-      orderToEdit.setOrderName(order.getOrderName());
+      order.setModifiedBy("sherlock");
+      order.setModifiedDate(new Date());
+      order.setInvoiceNumber(order.getInvoiceNumber());
+      order.setOrderDescription(order.getOrderDescription());
+      order.setOrderName(order.getOrderName());
 
-      return orderRepository.save(orderToEdit);
+      return orderRepository.save(order);
    }
 
    @Override

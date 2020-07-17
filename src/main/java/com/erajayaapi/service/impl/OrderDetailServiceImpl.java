@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
@@ -28,6 +29,16 @@ public class OrderDetailServiceImpl implements OrderDetailService {
    @Override
    public OrderDetail getOrderDetailById(Long id) {
       return orderDetailRepository.findById(id).get();
+   }
+
+   @Override
+   public List<OrderDetail> findOrderDetailByOrderId(Long orderId) {
+      return orderDetailRepository.findByOrderId(orderId);
+   }
+
+   @Override
+   public Optional<OrderDetail> findByOrderIdAndOrderDetailItem(Long orderId, String itemName) {
+      return orderDetailRepository.findByOrderIdAndOrderDetailItem(orderId, itemName);
    }
 
    @Override

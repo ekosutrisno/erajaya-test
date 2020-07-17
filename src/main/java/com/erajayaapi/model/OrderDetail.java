@@ -15,7 +15,7 @@ public class OrderDetail {
    private Long orderDetailId;
 
    @Column(name = "order_id", nullable = false)
-   private Long OrderId;
+   private Long orderId;
 
    private String orderDetailItem;
    private Integer orderDetailItemQuantity;

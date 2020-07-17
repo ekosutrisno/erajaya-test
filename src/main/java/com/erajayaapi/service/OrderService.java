@@ -1,5 +1,6 @@
 package com.erajayaapi.service;
 
+import com.erajayaapi.dto.OrderRequest;
 import com.erajayaapi.model.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ public interface OrderService {
 
    Order saveDataOrder(Order order);
 
-   Order updateDataOrder(Long orderId, Order order);
+   Order updateDataOrder(Order order);
 
    void deleteDataOrder(Long orderId);
 }
