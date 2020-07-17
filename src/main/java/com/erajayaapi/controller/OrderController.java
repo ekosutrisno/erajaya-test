@@ -40,17 +40,18 @@ public class OrderController {
       List<ResponseOrder> responseOrders = new ArrayList<>();
 
       for (Order order : orderPage.getContent()) {
-         responseOrders.add(new ResponseOrder(
-                 order.getOrderId(),
-                 order.getInvoiceNumber(),
-                 order.getOrderName(),
-                 orderDetailService.findOrderDetailByOrderId(order.getOrderId()),
-                 order.getOrderDescription(),
-                 order.getCreatedDate(),
-                 order.getCreatedBy(),
-                 order.getModifiedDate(),
-                 order.getModifiedBy()
-         ));
+         if (order.getStatus())
+            responseOrders.add(new ResponseOrder(
+                    order.getOrderId(),
+                    order.getInvoiceNumber(),
+                    order.getOrderName(),
+                    orderDetailService.findOrderDetailByOrderId(order.getOrderId()),
+                    order.getOrderDescription(),
+                    order.getCreatedDate(),
+                    order.getCreatedBy(),
+                    order.getModifiedDate(),
+                    order.getModifiedBy()
+            ));
       }
 
       var response = new ResponseAllPaging(
@@ -172,4 +173,16 @@ public class OrderController {
       }
       return new ResponseEntity<>(response, OK);
    }
+
+   @DeleteMapping("/{id}")
+   public ResponseEntity<?> deleteOrderStatus(@PathVariable("id") Long id) {
+      //Change status order from active to non active
+      orderService.deleteDataOrder(id);
+
+      Map<String, String> response = new HashMap<>();
+      response.put("Message", "Status dhanged and not available to Get");
+      response.put("Status", "Success");
+      return new ResponseEntity<>(response, OK);
+   }
+
 }
