@@ -11,7 +11,6 @@ import com.erajayaapi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,25 +68,24 @@ public class OrderController {
    }
 
    @GetMapping("/{id}")
-   public ResponseEntity<ResponseOrder> getOrderById(@PathVariable("id") Long id) {
-      Order order = orderService.getDataOrderById(id);
-      List<OrderDetail> orderDetail = orderDetailService.findOrderDetailByOrderId(order.getOrderId());
+   public ResponseEntity<?> getOrderById(@PathVariable("id") Long id) {
+      Optional<Order> order = orderService.getDataOrderById(id);
+      if (order.isPresent() && order.get().getStatus()) {
+         List<OrderDetail> orderDetail = orderDetailService.findOrderDetailByOrderId(order.get().getOrderId());
 
-      if (order != null) {
          ResponseOrder response = new ResponseOrder(
-                 order.getOrderId(),
-                 order.getInvoiceNumber(),
-                 order.getOrderName(),
+                 order.get().getOrderId(),
+                 order.get().getInvoiceNumber(),
+                 order.get().getOrderName(),
                  orderDetail,
-                 order.getOrderDescription(),
-                 order.getCreatedDate(),
-                 order.getCreatedBy(),
-                 order.getModifiedDate(),
-                 order.getModifiedBy()
+                 order.get().getOrderDescription(),
+                 order.get().getCreatedDate(),
+                 order.get().getCreatedBy(),
+                 order.get().getModifiedDate(),
+                 order.get().getModifiedBy()
          );
          return new ResponseEntity<>(response, OK);
       }
-
       throw new ApiRequestException("Data tidak ditemukan dengan Id [" + id + "].");
    }
 
@@ -106,10 +104,12 @@ public class OrderController {
       if (request.getOrderList().isEmpty()) {
          resOrderDetail = request.getOrderList();
       } else {
-         request.getOrderList().forEach(detail -> {
+         List<OrderDetail> orderDetails = new ArrayList<>();
+         for (OrderDetail detail : request.getOrderList()) {
             detail.setOrderId(resOrder.getOrderId());
             detail.setOrderDetailItemPrice(detail.getOrderDetailItemPrice() * detail.getOrderDetailItemQuantity());
-         });
+         }
+
          //Save Order details
          resOrderDetail = orderDetailService.saveOrderDetail(request.getOrderList());
       }
@@ -131,44 +131,45 @@ public class OrderController {
 
    @PutMapping("/{id}")
    public ResponseEntity<?> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest request) {
-      Order orderToUpdate = orderService.getDataOrderById(id);
+      Order orderToUpdate = orderService.getDataOrderById(id).get();
       orderToUpdate.setOrderName(request.getOrderName());
       orderToUpdate.setInvoiceNumber(request.getInvoiceNumber());
       orderToUpdate.setOrderDescription(request.getOrderDescription());
 
       Map<String, String> response = new HashMap<>();
+
+      //Save Updated Order
       orderService.updateDataOrder(orderToUpdate);
-      response.put("Message", "Order Updated");
 
       if (request.getOrderList().size() == 0) {
-         response.put("Message", "No Order detail item updated");
+         response.put("Status", "Success");
+         response.put("Message", "Order Updated");
+         response.put("OrderDetail", "No Order detail item updated");
       } else {
          OrderDetail oDetail = request.getOrderList().get(0);
          Optional<OrderDetail> optOrderDetail = orderDetailService.findByOrderIdAndOrderDetailItem(orderToUpdate.getOrderId(), oDetail.getOrderDetailItem());
 
-         int quantityUpdate = optOrderDetail.get().getOrderDetailItemQuantity() + oDetail.getOrderDetailItemQuantity();
-         double newPrice = oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity();
-         double priceUpdate = optOrderDetail.get().getOrderDetailItemPrice() + newPrice;
-
          if (optOrderDetail.isPresent()) {
+            int quantityUpdate = optOrderDetail.get().getOrderDetailItemQuantity() + oDetail.getOrderDetailItemQuantity();
+            double newPrice = oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity();
+            double priceUpdate = optOrderDetail.get().getOrderDetailItemPrice() + newPrice;
+
             optOrderDetail.get().setOrderDetailItemQuantity(quantityUpdate);
             optOrderDetail.get().setOrderDetailItemPrice(priceUpdate);
 
-            //Save setiap order details
-            List<OrderDetail> orderDetails = Arrays.asList(optOrderDetail.get());
-            orderDetailService.saveOrderDetail(orderDetails);
-            response.put("Message", "Order detail updated");
+            //Save setiap order details updated
+            orderDetailService.updateOrderDetail(optOrderDetail.get().getOrderDetailId(), optOrderDetail.get());
          } else {
             oDetail.setOrderId(orderToUpdate.getOrderId());
             oDetail.setOrderDetailItemPrice(oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity());
-            //Save setiap order details
+
+            //Add setiap order details new
             List<OrderDetail> orderDetails = Arrays.asList(oDetail);
             orderDetailService.saveOrderDetail(orderDetails);
-            response.put("Message", "Order detail Added");
          }
          response.put("Status", "Success");
+         response.put("Message", "Order Updated");
       }
-
       return new ResponseEntity<>(response, OK);
    }
 }

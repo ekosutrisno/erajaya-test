@@ -49,10 +49,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
    @Override
    public OrderDetail updateOrderDetail(Long id, OrderDetail orderDetail) {
       OrderDetail orderDetailToEdit = orderDetailRepository.findById(id).get();
-      double totalPrice = orderDetail.getOrderDetailItemPrice() * orderDetail.getOrderDetailItemPrice();
 
       orderDetailToEdit.setOrderDetailItem(orderDetail.getOrderDetailItem());
-      orderDetailToEdit.setOrderDetailItemPrice(totalPrice);
+      orderDetailToEdit.setOrderDetailItemPrice(orderDetail.getOrderDetailItemPrice());
       orderDetailToEdit.setOrderDetailItemQuantity(orderDetail.getOrderDetailItemQuantity());
       orderDetailToEdit.setOrderDetailMerchant(orderDetail.getOrderDetailMerchant());
 

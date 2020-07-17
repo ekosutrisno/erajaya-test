@@ -1,6 +1,5 @@
 package com.erajayaapi.service.impl;
 
-import com.erajayaapi.dto.OrderRequest;
 import com.erajayaapi.model.Order;
 import com.erajayaapi.repository.OrderRepository;
 import com.erajayaapi.service.OrderService;
@@ -33,9 +32,8 @@ public class OrderServiceImpl implements OrderService {
    }
 
    @Override
-   public Order getDataOrderById(Long id) {
-      Optional<Order> dataOrder = orderRepository.findById(id);
-      return dataOrder.orElse(null);
+   public Optional<Order> getDataOrderById(Long id) {
+      return orderRepository.findById(id);
    }
 
    @Override

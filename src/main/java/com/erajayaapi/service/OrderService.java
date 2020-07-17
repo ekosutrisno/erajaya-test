@@ -6,13 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
    List<Order> getAllOrder();
 
    Page<Order> getAllOrderWIthPagination(Pageable page);
 
-   Order getDataOrderById(Long id);
+   Optional<Order> getDataOrderById(Long id);
 
    Order saveDataOrder(Order order);
 
