@@ -102,17 +102,17 @@ public class OrderController {
       Order resOrder = orderService.saveDataOrder(order);
 
       List<OrderDetail> resOrderDetail;
-      if (request.getOrderList().isEmpty()) {
-         resOrderDetail = request.getOrderList();
+      if (request.getOrderDetail().size() == 0) {
+         resOrderDetail = request.getOrderDetail();
       } else {
          List<OrderDetail> orderDetails = new ArrayList<>();
-         for (OrderDetail detail : request.getOrderList()) {
+         for (OrderDetail detail : request.getOrderDetail()) {
             detail.setOrderId(resOrder.getOrderId());
             detail.setOrderDetailItemPrice(detail.getOrderDetailItemPrice() * detail.getOrderDetailItemQuantity());
          }
 
          //Save Order details
-         resOrderDetail = orderDetailService.saveOrderDetail(request.getOrderList());
+         resOrderDetail = orderDetailService.saveOrderDetail(request.getOrderDetail());
       }
 
       return new ResponseEntity<>(
@@ -132,57 +132,70 @@ public class OrderController {
 
    @PutMapping("/{id}")
    public ResponseEntity<?> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest request) {
-      Order orderToUpdate = orderService.getDataOrderById(id).get();
-      orderToUpdate.setOrderName(request.getOrderName());
-      orderToUpdate.setInvoiceNumber(request.getInvoiceNumber());
-      orderToUpdate.setOrderDescription(request.getOrderDescription());
+      Optional<Order> orderToUpdateFromDB = orderService.getDataOrderById(id);
 
-      Map<String, String> response = new HashMap<>();
+      if (orderToUpdateFromDB.isPresent()) {
+         Order orderToUpdate = orderToUpdateFromDB.get();
 
-      //Save Updated Order
-      orderService.updateDataOrder(orderToUpdate);
+         orderToUpdate.setOrderName(request.getOrderName());
+         orderToUpdate.setInvoiceNumber(request.getInvoiceNumber());
+         orderToUpdate.setOrderDescription(request.getOrderDescription());
 
-      if (request.getOrderList().size() == 0) {
-         response.put("Status", "Success");
-         response.put("Message", "Order Updated");
-         response.put("OrderDetail", "No Order detail item updated");
-      } else {
-         OrderDetail oDetail = request.getOrderList().get(0);
-         Optional<OrderDetail> optOrderDetail = orderDetailService.findByOrderIdAndOrderDetailItem(orderToUpdate.getOrderId(), oDetail.getOrderDetailItem());
+         Map<String, String> response = new HashMap<>();
 
-         if (optOrderDetail.isPresent()) {
-            int quantityUpdate = optOrderDetail.get().getOrderDetailItemQuantity() + oDetail.getOrderDetailItemQuantity();
-            double newPrice = oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity();
-            double priceUpdate = optOrderDetail.get().getOrderDetailItemPrice() + newPrice;
+         //Save Updated Order
+         orderService.updateDataOrder(orderToUpdate);
 
-            optOrderDetail.get().setOrderDetailItemQuantity(quantityUpdate);
-            optOrderDetail.get().setOrderDetailItemPrice(priceUpdate);
-
-            //Save setiap order details updated
-            orderDetailService.updateOrderDetail(optOrderDetail.get().getOrderDetailId(), optOrderDetail.get());
+         if (request.getOrderDetail().size() == 0) {
+            response.put("Status", "Success");
+            response.put("Message", "Order Updated");
+            response.put("OrderDetail", "No Order detail item updated");
          } else {
-            oDetail.setOrderId(orderToUpdate.getOrderId());
-            oDetail.setOrderDetailItemPrice(oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity());
+            OrderDetail oDetail = request.getOrderDetail().get(0);
+            Optional<OrderDetail> optOrderDetail = orderDetailService.findByOrderIdAndOrderDetailItem(orderToUpdate.getOrderId(), oDetail.getOrderDetailItem());
 
-            //Add setiap order details new
-            List<OrderDetail> orderDetails = Arrays.asList(oDetail);
-            orderDetailService.saveOrderDetail(orderDetails);
+            if (optOrderDetail.isPresent()) {
+               int quantityUpdate = optOrderDetail.get().getOrderDetailItemQuantity() + oDetail.getOrderDetailItemQuantity();
+               double newPrice = oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity();
+               double priceUpdate = optOrderDetail.get().getOrderDetailItemPrice() + newPrice;
+
+               optOrderDetail.get().setOrderDetailItemQuantity(quantityUpdate);
+               optOrderDetail.get().setOrderDetailItemPrice(priceUpdate);
+
+               //Save setiap order details updated
+               orderDetailService.updateOrderDetail(optOrderDetail.get().getOrderDetailId(), optOrderDetail.get());
+            } else {
+               oDetail.setOrderId(orderToUpdate.getOrderId());
+               oDetail.setOrderDetailItemPrice(oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity());
+
+               //Add setiap order details new
+               List<OrderDetail> orderDetails = Arrays.asList(oDetail);
+               orderDetailService.saveOrderDetail(orderDetails);
+            }
+            response.put("Status", "Success");
+            response.put("Message", "Order Updated");
          }
-         response.put("Status", "Success");
-         response.put("Message", "Order Updated");
+         return new ResponseEntity<>(response, OK);
       }
-      return new ResponseEntity<>(response, OK);
+
+      throw new ApiRequestException("Data tidak ditemukan dengan Id [" + id + "]. and update Failed!");
    }
 
    @DeleteMapping("/{id}")
    public ResponseEntity<?> deleteOrderStatus(@PathVariable("id") Long id) {
-      //Change status order from active to non active
-      orderService.deleteDataOrder(id);
+      Optional<Order> orderToDelete = orderService.getDataOrderById(id);
 
-      Map<String, String> response = new HashMap<>();
-      response.put("Message", "Status dhanged and not available to Get");
-      response.put("Status", "Success");
-      return new ResponseEntity<>(response, OK);
+      if (orderToDelete.isPresent()) {
+         //Change status order from active to non active
+         orderService.deleteDataOrder(id);
+
+         Map<String, String> response = new HashMap<>();
+         response.put("Message", "Status dhanged and not available to Get");
+         response.put("Status", "Success");
+         return new ResponseEntity<>(response, OK);
+      }
+
+      throw new ApiRequestException("Data tidak ditemukan dengan Id [" + id + "]. and status Changed Failed!");
    }
 
 }

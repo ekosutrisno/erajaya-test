@@ -9,6 +9,6 @@ import java.util.List;
 public class OrderRequest {
    private String invoiceNumber;
    private String orderName;
-   private List<OrderDetail> orderList;
+   private List<OrderDetail> orderDetail;
    private String orderDescription;
 }
