@@ -105,11 +105,10 @@ public class OrderController {
       if (request.getOrderDetail().size() == 0) {
          resOrderDetail = request.getOrderDetail();
       } else {
-         List<OrderDetail> orderDetails = new ArrayList<>();
-         for (OrderDetail detail : request.getOrderDetail()) {
+         request.getOrderDetail().stream().forEach(detail -> {
             detail.setOrderId(resOrder.getOrderId());
             detail.setOrderDetailItemPrice(detail.getOrderDetailItemPrice() * detail.getOrderDetailItemQuantity());
-         }
+         });
 
          //Save Order details
          resOrderDetail = orderDetailService.saveOrderDetail(request.getOrderDetail());
@@ -151,27 +150,29 @@ public class OrderController {
             response.put("Message", "Order Updated");
             response.put("OrderDetail", "No Order detail item updated");
          } else {
-            OrderDetail oDetail = request.getOrderDetail().get(0);
-            Optional<OrderDetail> optOrderDetail = orderDetailService.findByOrderIdAndOrderDetailItem(orderToUpdate.getOrderId(), oDetail.getOrderDetailItem());
+            request.getOrderDetail().stream().forEach(oDetail -> {
+               Optional<OrderDetail> optOrderDetail = orderDetailService.findByOrderIdAndOrderDetailItem(orderToUpdate.getOrderId(), oDetail.getOrderDetailItem());
 
-            if (optOrderDetail.isPresent()) {
-               int quantityUpdate = optOrderDetail.get().getOrderDetailItemQuantity() + oDetail.getOrderDetailItemQuantity();
-               double newPrice = oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity();
-               double priceUpdate = optOrderDetail.get().getOrderDetailItemPrice() + newPrice;
+               if (optOrderDetail.isPresent()) {
+                  int quantityUpdate = optOrderDetail.get().getOrderDetailItemQuantity() + oDetail.getOrderDetailItemQuantity();
+                  double newPrice = oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity();
+                  double priceUpdate = optOrderDetail.get().getOrderDetailItemPrice() + newPrice;
 
-               optOrderDetail.get().setOrderDetailItemQuantity(quantityUpdate);
-               optOrderDetail.get().setOrderDetailItemPrice(priceUpdate);
+                  optOrderDetail.get().setOrderDetailItemQuantity(quantityUpdate);
+                  optOrderDetail.get().setOrderDetailItemPrice(priceUpdate);
 
-               //Save setiap order details updated
-               orderDetailService.updateOrderDetail(optOrderDetail.get().getOrderDetailId(), optOrderDetail.get());
-            } else {
-               oDetail.setOrderId(orderToUpdate.getOrderId());
-               oDetail.setOrderDetailItemPrice(oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity());
+                  //Save each order details updated
+                  orderDetailService.updateOrderDetail(optOrderDetail.get().getOrderDetailId(), optOrderDetail.get());
+               } else {
+                  oDetail.setOrderId(orderToUpdate.getOrderId());
+                  oDetail.setOrderDetailItemPrice(oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity());
 
-               //Add setiap order details new
-               List<OrderDetail> orderDetails = Arrays.asList(oDetail);
-               orderDetailService.saveOrderDetail(orderDetails);
-            }
+                  //Add each order details new
+                  List<OrderDetail> orderDetails = Arrays.asList(oDetail);
+                  orderDetailService.saveOrderDetail(orderDetails);
+               }
+            });
+
             response.put("Status", "Success");
             response.put("Message", "Order Updated");
          }
