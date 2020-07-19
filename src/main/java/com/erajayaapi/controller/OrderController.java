@@ -8,6 +8,7 @@ import com.erajayaapi.model.Order;
 import com.erajayaapi.model.OrderDetail;
 import com.erajayaapi.service.OrderDetailService;
 import com.erajayaapi.service.OrderService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -91,6 +92,7 @@ public class OrderController {
    }
 
    @PostMapping("/add-order")
+   @ApiOperation(value = "Add order", notes = "orderId and orderDetailId not required, will generated automaticly")
    public ResponseEntity<ResponseOrder> createOrder(@RequestBody OrderRequest request) {
       var order = new Order(
               request.getOrderName(),
@@ -130,6 +132,7 @@ public class OrderController {
    }
 
    @PutMapping("/{id}")
+   @ApiOperation(value = "Update order", notes = "orderId and orderDetailId not required, will generated automaticly")
    public ResponseEntity<?> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest request) {
       Optional<Order> orderToUpdateFromDB = orderService.getDataOrderById(id);
 
