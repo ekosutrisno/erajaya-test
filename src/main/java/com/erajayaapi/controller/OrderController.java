@@ -202,4 +202,20 @@ public class OrderController {
       throw new ApiRequestException("Data tidak ditemukan dengan Id [" + id + "]. and status Changed Failed!");
    }
 
+   @DeleteMapping("/delete-item")
+   public ResponseEntity<?> deleteOrderDetailItems(@RequestBody OrderDetail orderDetail) {
+      Optional<OrderDetail> orderDetail1ToDelete = orderDetailService.findByOrderIdAndOrderDetailItem(orderDetail.getOrderId(), orderDetail.getOrderDetailItem());
+      if (orderDetail1ToDelete.isPresent()) {
+         //Delete order detail item
+         orderDetailService.deleteOrderDetail(orderDetail1ToDelete.get().getOrderDetailId());
+
+         Map<String, String> response = new HashMap<>();
+         response.put("Message", "Order detail item deleted.");
+         response.put("Status", "Success");
+         return new ResponseEntity<>(response, OK);
+      }
+
+      throw new ApiRequestException("Data tidak ditemukan, and delete item Failed!");
+   }
+
 }
