@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/operation_db
     username: postgres
-    password: root
+    password: admin
   jpa:
     hibernate:
       ddl-auto: update

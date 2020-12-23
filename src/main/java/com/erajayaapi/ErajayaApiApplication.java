@@ -17,7 +17,6 @@ import java.util.Collections;
 public class ErajayaApiApplication {
 
    public static void main(String[] args) {
-      System.setProperty("spring.config.name", "application");
       SpringApplication.run(ErajayaApiApplication.class, args);
    }
 

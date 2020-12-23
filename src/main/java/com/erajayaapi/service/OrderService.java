@@ -17,7 +17,7 @@ public interface OrderService {
 
    Order saveDataOrder(Order order);
 
-   Order updateDataOrder(Order order);
+   void updateDataOrder(Order order);
 
    void deleteDataOrder(Long orderId);
 }

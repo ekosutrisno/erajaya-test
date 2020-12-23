@@ -13,54 +13,58 @@ import java.util.Optional;
 
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
-   @Autowired
-   private OrderDetailRepository orderDetailRepository;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
-   @Override
-   public List<OrderDetail> getALlOrderDetail() {
-      return orderDetailRepository.findAll();
-   }
+    @Override
+    public List<OrderDetail> getALlOrderDetail() {
+        return orderDetailRepository.findAll();
+    }
 
-   @Override
-   public Page<OrderDetail> getAllOrderDetailWithPagination(Pageable page) {
-      return orderDetailRepository.findAll(page);
-   }
+    @Override
+    public Page<OrderDetail> getAllOrderDetailWithPagination(Pageable page) {
+        return orderDetailRepository.findAll(page);
+    }
 
-   @Override
-   public OrderDetail getOrderDetailById(Long id) {
-      return orderDetailRepository.findById(id).get();
-   }
+    @Override
+    public OrderDetail getOrderDetailById(Long id) {
+        return orderDetailRepository.findById(id).get();
+    }
 
-   @Override
-   public List<OrderDetail> findOrderDetailByOrderId(Long orderId) {
-      return orderDetailRepository.findByOrderId(orderId);
-   }
+    @Override
+    public List<OrderDetail> findOrderDetailByOrderId(Long orderId) {
+        return orderDetailRepository.findByOrderId(orderId);
+    }
 
-   @Override
-   public Optional<OrderDetail> findByOrderIdAndOrderDetailItem(Long orderId, String itemName) {
-      return orderDetailRepository.findByOrderIdAndOrderDetailItem(orderId, itemName);
-   }
+    @Override
+    public Optional<OrderDetail> findByOrderIdAndOrderDetailItem(Long orderId, String itemName) {
+        return orderDetailRepository.findByOrderIdAndOrderDetailItem(orderId, itemName);
+    }
 
-   @Override
-   public List<OrderDetail> saveOrderDetail(List<OrderDetail> orderDetail) {
-      return orderDetailRepository.saveAll(orderDetail);
-   }
+    @Override
+    public List<OrderDetail> saveOrderDetail(List<OrderDetail> orderDetail) {
+        return orderDetailRepository.saveAll(orderDetail);
+    }
 
-   @Override
-   public OrderDetail updateOrderDetail(Long id, OrderDetail orderDetail) {
-      OrderDetail orderDetailToEdit = orderDetailRepository.findById(id).get();
+    @Override
+    public OrderDetail updateOrderDetail(Long id, OrderDetail orderDetail) {
+        Optional<OrderDetail> orderDetailToEdit = orderDetailRepository.findById(id);
+        if (orderDetailToEdit.isPresent()) {
+            OrderDetail orderDetailData = orderDetailToEdit.get();
+            orderDetailData.setOrderDetailItem(orderDetail.getOrderDetailItem());
+            orderDetailData.setOrderDetailItemPrice(orderDetail.getOrderDetailItemPrice());
+            orderDetailData.setOrderDetailItemQuantity(orderDetail.getOrderDetailItemQuantity());
+            orderDetailData.setOrderDetailMerchant(orderDetail.getOrderDetailMerchant());
 
-      orderDetailToEdit.setOrderDetailItem(orderDetail.getOrderDetailItem());
-      orderDetailToEdit.setOrderDetailItemPrice(orderDetail.getOrderDetailItemPrice());
-      orderDetailToEdit.setOrderDetailItemQuantity(orderDetail.getOrderDetailItemQuantity());
-      orderDetailToEdit.setOrderDetailMerchant(orderDetail.getOrderDetailMerchant());
+            return orderDetailRepository.save(orderDetailData);
 
-      return orderDetailRepository.save(orderDetailToEdit);
-   }
+        }
+        return null;
+    }
 
-   @Override
-   public void deleteOrderDetail(Long id) {
-      OrderDetail orderDetailToDelete = orderDetailRepository.findById(id).get();
-      orderDetailRepository.delete(orderDetailToDelete);
-   }
+    @Override
+    public void deleteOrderDetail(Long id) {
+        OrderDetail orderDetailToDelete = orderDetailRepository.findById(id).get();
+        orderDetailRepository.delete(orderDetailToDelete);
+    }
 }
