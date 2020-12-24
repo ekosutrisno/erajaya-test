@@ -1,7 +1,6 @@
 package com.erajayaapi.service.impl;
 
-import com.erajayaapi.model.Common;
-import com.erajayaapi.model.Order;
+import com.erajayaapi.model.OrderEntity;
 import com.erajayaapi.repository.OrderRepository;
 import com.erajayaapi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,26 +16,30 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+
+    public OrderServiceImpl(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     @Override
-    public List<Order> getAllOrder() {
-        return orderRepository.findAll().stream().filter(Common::getStatus)
+    public List<OrderEntity> getAllOrder() {
+        return orderRepository.findAll().stream().filter(OrderEntity::getStatus)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<Order> getAllOrderWIthPagination(Pageable page) {
-        return orderRepository.findAll(page);
+    public Page<OrderEntity> getAllOrderWIthPagination(Pageable page) {
+        return orderRepository.findAllOrderWithPagination(page);
     }
 
     @Override
-    public Optional<Order> getDataOrderById(Long id) {
+    public Optional<OrderEntity> getDataOrderById(Long id) {
         return orderRepository.findById(id);
     }
 
     @Override
-    public Order saveDataOrder(Order order) {
+    public OrderEntity saveDataOrder(OrderEntity order) {
         order.setCreatedBy("XKX-009");
         order.setCreatedDate(new Date());
         order.setModifiedBy("XKX-010");
@@ -47,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateDataOrder(Order order) {
+    public void updateDataOrder(OrderEntity order) {
 
         order.setModifiedBy("sherlock");
         order.setModifiedDate(new Date());
@@ -60,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void deleteDataOrder(Long orderId) {
-        Order orderToDelete = orderRepository.findById(orderId).get();
+        OrderEntity orderToDelete = orderRepository.findById(orderId).get();
         orderToDelete.setStatus(false);
 
         orderRepository.save(orderToDelete);

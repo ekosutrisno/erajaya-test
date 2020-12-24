@@ -1,7 +1,6 @@
 package com.erajayaapi.service;
 
-import com.erajayaapi.dto.OrderRequest;
-import com.erajayaapi.model.Order;
+import com.erajayaapi.model.OrderEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -9,15 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderService {
-   List<Order> getAllOrder();
+   List<OrderEntity> getAllOrder();
 
-   Page<Order> getAllOrderWIthPagination(Pageable page);
+   Page<OrderEntity> getAllOrderWIthPagination(Pageable page);
 
-   Optional<Order> getDataOrderById(Long id);
+   Optional<OrderEntity> getDataOrderById(Long id);
 
-   Order saveDataOrder(Order order);
+   OrderEntity saveDataOrder(OrderEntity order);
 
-   void updateDataOrder(Order order);
+   void updateDataOrder(OrderEntity order);
 
    void deleteDataOrder(Long orderId);
 }

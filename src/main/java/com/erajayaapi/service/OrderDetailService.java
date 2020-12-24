@@ -1,6 +1,6 @@
 package com.erajayaapi.service;
 
-import com.erajayaapi.model.OrderDetail;
+import com.erajayaapi.model.OrderDetailEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -8,20 +8,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderDetailService {
-   List<OrderDetail> getALlOrderDetail();
+   List<OrderDetailEntity> getALlOrderDetail();
 
-   Page<OrderDetail> getAllOrderDetailWithPagination(Pageable page);
+   Page<OrderDetailEntity> getAllOrderDetailWithPagination(Pageable page);
 
-   OrderDetail getOrderDetailById(Long id);
+   OrderDetailEntity getOrderDetailById(Long id);
 
-   List<OrderDetail> saveOrderDetail(List<OrderDetail> orderDetail);
+   List<OrderDetailEntity> saveOrderDetail(List<OrderDetailEntity> orderDetail);
 
-   List<OrderDetail> findOrderDetailByOrderId(Long orderId);
+   List<OrderDetailEntity> findOrderDetailByOrderId(Long orderId);
 
-   Optional<OrderDetail> findByOrderIdAndOrderDetailItem(Long orderId, String itemName);
+   Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(Long orderId, String itemName);
 
 
-   OrderDetail updateOrderDetail(Long id, OrderDetail orderDetail);
+   OrderDetailEntity updateOrderDetail(Long id, OrderDetailEntity orderDetail);
 
    void deleteOrderDetail(Long id);
 }

@@ -1,6 +1,6 @@
 package com.erajayaapi.dto;
 
-import com.erajayaapi.model.OrderDetail;
+import com.erajayaapi.model.OrderDetailEntity;
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +9,6 @@ import java.util.List;
 public class OrderRequest {
    private String invoiceNumber;
    private String orderName;
-   private List<OrderDetail> orderDetail;
+   private List<OrderDetailEntity> orderDetail;
    private String orderDescription;
 }

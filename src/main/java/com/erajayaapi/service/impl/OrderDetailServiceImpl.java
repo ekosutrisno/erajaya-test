@@ -1,6 +1,6 @@
 package com.erajayaapi.service.impl;
 
-import com.erajayaapi.model.OrderDetail;
+import com.erajayaapi.model.OrderDetailEntity;
 import com.erajayaapi.repository.OrderDetailRepository;
 import com.erajayaapi.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,40 +17,40 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     private OrderDetailRepository orderDetailRepository;
 
     @Override
-    public List<OrderDetail> getALlOrderDetail() {
+    public List<OrderDetailEntity> getALlOrderDetail() {
         return orderDetailRepository.findAll();
     }
 
     @Override
-    public Page<OrderDetail> getAllOrderDetailWithPagination(Pageable page) {
+    public Page<OrderDetailEntity> getAllOrderDetailWithPagination(Pageable page) {
         return orderDetailRepository.findAll(page);
     }
 
     @Override
-    public OrderDetail getOrderDetailById(Long id) {
+    public OrderDetailEntity getOrderDetailById(Long id) {
         return orderDetailRepository.findById(id).get();
     }
 
     @Override
-    public List<OrderDetail> findOrderDetailByOrderId(Long orderId) {
+    public List<OrderDetailEntity> findOrderDetailByOrderId(Long orderId) {
         return orderDetailRepository.findByOrderId(orderId);
     }
 
     @Override
-    public Optional<OrderDetail> findByOrderIdAndOrderDetailItem(Long orderId, String itemName) {
+    public Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(Long orderId, String itemName) {
         return orderDetailRepository.findByOrderIdAndOrderDetailItem(orderId, itemName);
     }
 
     @Override
-    public List<OrderDetail> saveOrderDetail(List<OrderDetail> orderDetail) {
+    public List<OrderDetailEntity> saveOrderDetail(List<OrderDetailEntity> orderDetail) {
         return orderDetailRepository.saveAll(orderDetail);
     }
 
     @Override
-    public OrderDetail updateOrderDetail(Long id, OrderDetail orderDetail) {
-        Optional<OrderDetail> orderDetailToEdit = orderDetailRepository.findById(id);
+    public OrderDetailEntity updateOrderDetail(Long id, OrderDetailEntity orderDetail) {
+        Optional<OrderDetailEntity> orderDetailToEdit = orderDetailRepository.findById(id);
         if (orderDetailToEdit.isPresent()) {
-            OrderDetail orderDetailData = orderDetailToEdit.get();
+            OrderDetailEntity orderDetailData = orderDetailToEdit.get();
             orderDetailData.setOrderDetailItem(orderDetail.getOrderDetailItem());
             orderDetailData.setOrderDetailItemPrice(orderDetail.getOrderDetailItemPrice());
             orderDetailData.setOrderDetailItemQuantity(orderDetail.getOrderDetailItemQuantity());
@@ -64,7 +64,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public void deleteOrderDetail(Long id) {
-        OrderDetail orderDetailToDelete = orderDetailRepository.findById(id).get();
+        OrderDetailEntity orderDetailToDelete = orderDetailRepository.findById(id).get();
         orderDetailRepository.delete(orderDetailToDelete);
     }
 }

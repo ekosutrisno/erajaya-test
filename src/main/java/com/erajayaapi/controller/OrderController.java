@@ -4,8 +4,8 @@ import com.erajayaapi.dto.OrderRequest;
 import com.erajayaapi.dto.ResponseAllPaging;
 import com.erajayaapi.dto.ResponseOrder;
 import com.erajayaapi.exception.ApiRequestException;
-import com.erajayaapi.model.Order;
-import com.erajayaapi.model.OrderDetail;
+import com.erajayaapi.model.OrderEntity;
+import com.erajayaapi.model.OrderDetailEntity;
 import com.erajayaapi.service.OrderDetailService;
 import com.erajayaapi.service.OrderService;
 import io.swagger.annotations.Api;
@@ -34,17 +34,17 @@ public class OrderController {
 
     @GetMapping("/all-order")
     @ApiOperation(value = "Get All Order without Details", tags = {"Order"})
-    public List<Order> getAllOrder() {
+    public List<OrderEntity> getAllOrder() {
         return orderService.getAllOrder();
     }
 
     @GetMapping("/page-order")
     @ApiOperation(value = "Get All Order with Details", tags = {"Order"})
     public ResponseEntity<ResponseAllPaging> getAllOrderWithPagination(Pageable page) {
-        Page<Order> orderPage = orderService.getAllOrderWIthPagination(page);
+        Page<OrderEntity> orderPage = orderService.getAllOrderWIthPagination(page);
         List<ResponseOrder> responseOrders = new ArrayList<>();
 
-        for (Order order : orderPage.getContent()) {
+        for (OrderEntity order : orderPage.getContent()) {
             if (order.getStatus())
                 responseOrders.add(new ResponseOrder(
                         order.getOrderId(),
@@ -76,9 +76,9 @@ public class OrderController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get Single Order with Details", tags = {"Order"})
     public ResponseEntity<?> getOrderById(@PathVariable("id") Long id) {
-        Optional<Order> order = orderService.getDataOrderById(id);
+        Optional<OrderEntity> order = orderService.getDataOrderById(id);
         if (order.isPresent() && order.get().getStatus()) {
-            List<OrderDetail> orderDetail = orderDetailService.findOrderDetailByOrderId(order.get().getOrderId());
+            List<OrderDetailEntity> orderDetail = orderDetailService.findOrderDetailByOrderId(order.get().getOrderId());
 
             ResponseOrder response = new ResponseOrder(
                     order.get().getOrderId(),
@@ -99,16 +99,16 @@ public class OrderController {
     @PostMapping("/add-order")
     @ApiOperation(value = "Add order", notes = "orderId and orderDetailId not required, will generated automatic")
     public ResponseEntity<ResponseOrder> createOrder(@RequestBody OrderRequest request) {
-        var order = new Order(
+        var order = new OrderEntity(
                 request.getOrderName(),
                 request.getInvoiceNumber(),
                 request.getOrderDescription()
         );
 
         //Saving order
-        Order resOrder = orderService.saveDataOrder(order);
+        OrderEntity resOrder = orderService.saveDataOrder(order);
 
-        List<OrderDetail> resOrderDetail;
+        List<OrderDetailEntity> resOrderDetail;
         if (request.getOrderDetail().size() == 0) {
             resOrderDetail = request.getOrderDetail();
         } else {
@@ -139,10 +139,10 @@ public class OrderController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Update order", notes = "orderId and orderDetailId not required, will generated automatic")
     public ResponseEntity<?> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest request) {
-        Optional<Order> orderToUpdateFromDB = orderService.getDataOrderById(id);
+        Optional<OrderEntity> orderToUpdateFromDB = orderService.getDataOrderById(id);
 
         if (orderToUpdateFromDB.isPresent()) {
-            Order orderToUpdate = orderToUpdateFromDB.get();
+            OrderEntity orderToUpdate = orderToUpdateFromDB.get();
 
             orderToUpdate.setOrderName(request.getOrderName());
             orderToUpdate.setInvoiceNumber(request.getInvoiceNumber());
@@ -159,7 +159,7 @@ public class OrderController {
                 response.put("OrderDetail", "No Order detail item updated");
             } else {
                 request.getOrderDetail().forEach(oDetail -> {
-                    Optional<OrderDetail> optOrderDetail = orderDetailService.findByOrderIdAndOrderDetailItem(orderToUpdate.getOrderId(), oDetail.getOrderDetailItem());
+                    Optional<OrderDetailEntity> optOrderDetail = orderDetailService.findByOrderIdAndOrderDetailItem(orderToUpdate.getOrderId(), oDetail.getOrderDetailItem());
 
                     if (optOrderDetail.isPresent()) {
                         int quantityUpdate = optOrderDetail.get().getOrderDetailItemQuantity() + oDetail.getOrderDetailItemQuantity();
@@ -176,7 +176,7 @@ public class OrderController {
                         oDetail.setOrderDetailItemPrice(oDetail.getOrderDetailItemPrice() * oDetail.getOrderDetailItemQuantity());
 
                         //Add each order details new
-                        List<OrderDetail> orderDetails = Collections.singletonList(oDetail);
+                        List<OrderDetailEntity> orderDetails = Collections.singletonList(oDetail);
                         orderDetailService.saveOrderDetail(orderDetails);
                     }
                 });
@@ -193,7 +193,7 @@ public class OrderController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete Order", notes = "Change Order Status")
     public ResponseEntity<?> deleteOrderStatus(@PathVariable("id") Long id) {
-        Optional<Order> orderToDelete = orderService.getDataOrderById(id);
+        Optional<OrderEntity> orderToDelete = orderService.getDataOrderById(id);
 
         if (orderToDelete.isPresent()) {
             //Change status order from active to non active
@@ -210,8 +210,8 @@ public class OrderController {
 
     @DeleteMapping("/delete-item")
     @ApiOperation(value = "Change Order Detail Status", tags = {"Order"})
-    public ResponseEntity<?> deleteOrderDetailItems(@RequestBody OrderDetail orderDetail) {
-        Optional<OrderDetail> orderDetail1ToDelete = orderDetailService
+    public ResponseEntity<?> deleteOrderDetailItems(@RequestBody OrderDetailEntity orderDetail) {
+        Optional<OrderDetailEntity> orderDetail1ToDelete = orderDetailService
                 .findByOrderIdAndOrderDetailItem(orderDetail.getOrderId(), orderDetail.getOrderDetailItem());
 
         if (orderDetail1ToDelete.isPresent()) {

@@ -1,6 +1,6 @@
 package com.erajayaapi.repository;
 
-import com.erajayaapi.model.OrderDetail;
+import com.erajayaapi.model.OrderDetailEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, Long> {
 
-   List<OrderDetail> findByOrderId(Long orderId);
+   List<OrderDetailEntity> findByOrderId(Long orderId);
 
-   Optional<OrderDetail> findByOrderIdAndOrderDetailItem(Long orderId, String itemName);
+   Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(Long orderId, String itemName);
 }

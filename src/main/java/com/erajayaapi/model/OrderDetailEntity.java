@@ -6,8 +6,8 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = OrderDetail.TABLE_NAME)
-public class OrderDetail {
+@Table(name = OrderDetailEntity.TABLE_NAME)
+public class OrderDetailEntity {
    static final String TABLE_NAME = "t_order_detail";
 
    @Id
