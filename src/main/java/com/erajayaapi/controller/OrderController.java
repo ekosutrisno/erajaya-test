@@ -95,7 +95,7 @@ public class OrderController {
      */
     @GetMapping("/{id}")
     @ApiOperation(value = "Get Single Order with Details", tags = {"Order"})
-    public ResponseEntity<?> getOrderById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getOrderById(@PathVariable("id") String id) {
         Optional<OrderEntity> order = orderService.getDataOrderById(id);
         if (order.isPresent() && order.get().getStatus()) {
             List<OrderDetailEntity> orderDetail = orderDetailService.findOrderDetailByOrderId(order.get().getOrderId());
@@ -139,6 +139,7 @@ public class OrderController {
             resOrderDetail = request.getOrderDetail();
         } else {
             request.getOrderDetail().forEach(detail -> {
+                detail.setOrderDetailId(UUID.randomUUID().toString());
                 detail.setOrderId(resOrder.getOrderId());
                 detail.setOrderDetailItemPrice(detail.getOrderDetailItemPrice() * detail.getOrderDetailItemQuantity());
             });
@@ -171,7 +172,7 @@ public class OrderController {
      */
     @PutMapping("/{id}")
     @ApiOperation(value = "Update order", notes = "orderId and orderDetailId not required, will generated automatic")
-    public ResponseEntity<?> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest request) {
+    public ResponseEntity<?> updateOrder(@PathVariable("id") String id, @RequestBody OrderRequest request) {
         Optional<OrderEntity> orderToUpdateFromDB = orderService.getDataOrderById(id);
 
         if (orderToUpdateFromDB.isPresent()) {
@@ -231,7 +232,7 @@ public class OrderController {
      */
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete Order", notes = "Change Order Status")
-    public ResponseEntity<?> deleteOrderStatus(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteOrderStatus(@PathVariable("id") String id) {
         Optional<OrderEntity> orderToDelete = orderService.getDataOrderById(id);
 
         if (orderToDelete.isPresent()) {

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
 
 /**
@@ -23,8 +24,7 @@ public class OrderEntity {
     static final String TABLE_NAME = "t_order";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    private String orderId = UUID.randomUUID().toString();
     private String invoiceNumber;
     private String orderName;
     private String orderDescription;

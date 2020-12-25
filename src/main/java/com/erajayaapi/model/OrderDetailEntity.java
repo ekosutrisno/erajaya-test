@@ -3,6 +3,7 @@ package com.erajayaapi.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * The type Order detail entity.
@@ -11,20 +12,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = OrderDetailEntity.TABLE_NAME)
 public class OrderDetailEntity {
-   /**
-    * The Table name.
-    */
-   static final String TABLE_NAME = "t_order_detail";
+    /**
+     * The Table name.
+     */
+    static final String TABLE_NAME = "t_order_detail";
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long orderDetailId;
+    @Id
+    private String orderDetailId = UUID.randomUUID().toString();
 
-   @Column(name = "order_id", nullable = false)
-   private Long orderId;
+    @Column(name = "order_id", nullable = false)
+    private String orderId;
 
-   private String orderDetailItem;
-   private Integer orderDetailItemQuantity;
-   private Double orderDetailItemPrice;
-   private String orderDetailMerchant;
+    private String orderDetailItem;
+    private Integer orderDetailItemQuantity;
+    private Double orderDetailItemPrice;
+    private String orderDetailMerchant;
 }

@@ -15,10 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,9 +46,9 @@ class OrderEntityServiceTest {
     void getAllOrder() {
         //Set Mock Example Data
         List<OrderEntity> orders = List.of(
-                new OrderEntity(1L, "TRX-0001", "ORD-XX1", "Buy IPhone 12 Max", new Date(), "Eko C1", new Date(), "Eko M1", true),
-                new OrderEntity(2L, "TRX-0002", "ORD-XX2", "Buy IPhone 12 Max Pro", new Date(), "Eko C2", new Date(), "Eko M2", false),
-                new OrderEntity(3L, "TRX-0003", "ORD-XX3", "Buy IPhone 12 Max Pro", new Date(), "Eko C3", new Date(), "Eko M3", true)
+                new OrderEntity(UUID.randomUUID().toString(), "TRX-0001", "ORD-XX1", "Buy IPhone 12 Max", new Date(), "Eko C1", new Date(), "Eko M1", true),
+                new OrderEntity(UUID.randomUUID().toString(), "TRX-0002", "ORD-XX2", "Buy IPhone 12 Max Pro", new Date(), "Eko C2", new Date(), "Eko M2", false),
+                new OrderEntity(UUID.randomUUID().toString(), "TRX-0003", "ORD-XX3", "Buy IPhone 12 Max Pro", new Date(), "Eko C3", new Date(), "Eko M3", true)
         );
 
         // Mocking Data
@@ -72,9 +69,9 @@ class OrderEntityServiceTest {
     void getAllOrderWIthPagination() {
         // Set Mock Example Data
         List<OrderEntity> orders = List.of(
-                new OrderEntity(1L, "TRX-0001", "ORD-XX1", "Buy IPhone 12 Max", new Date(), "Eko C1", new Date(), "Eko M1", true),
-                new OrderEntity(2L, "TRX-0002", "ORD-XX2", "Buy IPhone 12 Max Pro", new Date(), "Eko C2", new Date(), "Eko M2", false),
-                new OrderEntity(3L, "TRX-0003", "ORD-XX3", "Buy IPhone 12 Max Pro", new Date(), "Eko C3", new Date(), "Eko M3", true)
+                new OrderEntity(UUID.randomUUID().toString(), "TRX-0001", "ORD-XX1", "Buy IPhone 12 Max", new Date(), "Eko C1", new Date(), "Eko M1", true),
+                new OrderEntity(UUID.randomUUID().toString(), "TRX-0002", "ORD-XX2", "Buy IPhone 12 Max Pro", new Date(), "Eko C2", new Date(), "Eko M2", false),
+                new OrderEntity(UUID.randomUUID().toString(), "TRX-0003", "ORD-XX3", "Buy IPhone 12 Max Pro", new Date(), "Eko C3", new Date(), "Eko M3", true)
         );
 
         // Convert to Page Object
@@ -103,9 +100,9 @@ class OrderEntityServiceTest {
     @Order(3)
     void getDataOrderById() {
         //Initial Example Data
-        Optional<OrderEntity> optionalOrderEntity = Optional.of(new OrderEntity(1L, "TRX-0001", "ORD-XX1", "Buy IPhone 12 Max", new Date(), "Eko C1", new Date(), "Eko M1", true));
+        Optional<OrderEntity> optionalOrderEntity = Optional.of(new OrderEntity(UUID.randomUUID().toString(), "TRX-0001", "ORD-XX1", "Buy IPhone 12 Max", new Date(), "Eko C1", new Date(), "Eko M1", true));
 
-        Long orderId = 1L;
+        String orderId = optionalOrderEntity.get().getOrderId();
         //Mocking Data
         when(orderRepository.findById(orderId)).thenReturn(optionalOrderEntity);
         Optional<OrderEntity> optionalOrder = orderService.getDataOrderById(orderId);
@@ -122,7 +119,7 @@ class OrderEntityServiceTest {
     @Order(4)
     void saveDataOrder() {
         //Util
-        Long orderId = new Random().nextLong();
+        String orderId = UUID.randomUUID().toString();
 
         // Initialize example data
         OrderEntity orderEntity = new OrderEntity(orderId, "TRX-0001", "ORD-XX1", "Buy IPhone 12 Max", new Date(), "Eko C1", new Date(), "Eko M1", true);

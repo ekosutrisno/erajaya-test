@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * The interface Order repository.
  */
 @Repository
-public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
+public interface OrderRepository extends JpaRepository<OrderEntity, String> {
 
     /**
      * Find all order with pagination page.

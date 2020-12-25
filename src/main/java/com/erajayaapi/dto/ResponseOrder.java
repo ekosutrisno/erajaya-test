@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class ResponseOrder {
-   private Long orderId;
+   private String orderId;
    private String invoiceNumber;
    private String orderName;
    private List<OrderDetailEntity> orderDetail;

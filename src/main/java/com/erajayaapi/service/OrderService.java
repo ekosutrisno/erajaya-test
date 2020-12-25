@@ -32,7 +32,7 @@ public interface OrderService {
     * @param id the id
     * @return the data order by id
     */
-   Optional<OrderEntity> getDataOrderById(Long id);
+   Optional<OrderEntity> getDataOrderById(String id);
 
    /**
     * Save data order order entity.
@@ -54,5 +54,5 @@ public interface OrderService {
     *
     * @param orderId the order id
     */
-   void deleteDataOrder(Long orderId);
+   void deleteDataOrder(String orderId);
 }

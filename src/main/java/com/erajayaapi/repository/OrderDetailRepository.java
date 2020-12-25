@@ -11,7 +11,7 @@ import java.util.Optional;
  * The interface Order detail repository.
  */
 @Repository
-public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, Long> {
+public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, String> {
 
    /**
     * Find by order id list.
@@ -19,7 +19,7 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, 
     * @param orderId the order id
     * @return the list
     */
-   List<OrderDetailEntity> findByOrderId(Long orderId);
+   List<OrderDetailEntity> findByOrderId(String orderId);
 
    /**
     * Find by order id and order detail item optional.
@@ -28,5 +28,5 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, 
     * @param itemName the item name
     * @return the optional
     */
-   Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(Long orderId, String itemName);
+   Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(String orderId, String itemName);
 }

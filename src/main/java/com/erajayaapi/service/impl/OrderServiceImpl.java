@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Optional<OrderEntity> getDataOrderById(Long id) {
+    public Optional<OrderEntity> getDataOrderById(String id) {
         return orderRepository.findById(id);
     }
 
@@ -70,10 +70,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteDataOrder(Long orderId) {
-        OrderEntity orderToDelete = orderRepository.findById(orderId).get();
-        orderToDelete.setStatus(false);
-
-        orderRepository.save(orderToDelete);
+    public void deleteDataOrder(String orderId) {
+        Optional<OrderEntity> orderToDelete = orderRepository.findById(orderId);
+        if (orderToDelete.isPresent()) {
+            OrderEntity orderEntity = orderToDelete.get();
+            orderEntity.setStatus(false);
+            orderRepository.save(orderEntity);
+        }
     }
 }

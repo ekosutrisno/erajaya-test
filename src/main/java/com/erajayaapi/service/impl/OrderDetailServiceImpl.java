@@ -30,17 +30,17 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public OrderDetailEntity getOrderDetailById(Long id) {
+    public OrderDetailEntity getOrderDetailById(String id) {
         return orderDetailRepository.findById(id).get();
     }
 
     @Override
-    public List<OrderDetailEntity> findOrderDetailByOrderId(Long orderId) {
+    public List<OrderDetailEntity> findOrderDetailByOrderId(String orderId) {
         return orderDetailRepository.findByOrderId(orderId);
     }
 
     @Override
-    public Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(Long orderId, String itemName) {
+    public Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(String orderId, String itemName) {
         return orderDetailRepository.findByOrderIdAndOrderDetailItem(orderId, itemName);
     }
 
@@ -50,7 +50,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public void updateOrderDetail(Long id, OrderDetailEntity orderDetail) {
+    public void updateOrderDetail(String id, OrderDetailEntity orderDetail) {
         Optional<OrderDetailEntity> orderDetailToEdit = orderDetailRepository.findById(id);
         if (orderDetailToEdit.isPresent()) {
             OrderDetailEntity orderDetailData = orderDetailToEdit.get();
@@ -65,7 +65,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public void deleteOrderDetail(Long id) {
+    public void deleteOrderDetail(String id) {
         OrderDetailEntity orderDetailToDelete = orderDetailRepository.findById(id).get();
         orderDetailRepository.delete(orderDetailToDelete);
     }

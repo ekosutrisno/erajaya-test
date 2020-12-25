@@ -32,7 +32,7 @@ public interface OrderDetailService {
      * @param id the id
      * @return the order detail by id
      */
-    OrderDetailEntity getOrderDetailById(Long id);
+    OrderDetailEntity getOrderDetailById(String id);
 
     /**
      * Save order detail list.
@@ -48,7 +48,7 @@ public interface OrderDetailService {
      * @param orderId the order id
      * @return the list
      */
-    List<OrderDetailEntity> findOrderDetailByOrderId(Long orderId);
+    List<OrderDetailEntity> findOrderDetailByOrderId(String orderId);
 
     /**
      * Find by order id and order detail item optional.
@@ -57,7 +57,7 @@ public interface OrderDetailService {
      * @param itemName the item name
      * @return the optional
      */
-    Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(Long orderId, String itemName);
+    Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(String orderId, String itemName);
 
     /**
      * Update order detail.
@@ -65,12 +65,12 @@ public interface OrderDetailService {
      * @param id          the id
      * @param orderDetail the order detail
      */
-    void updateOrderDetail(Long id, OrderDetailEntity orderDetail);
+    void updateOrderDetail(String id, OrderDetailEntity orderDetail);
 
     /**
      * Delete order detail.
      *
      * @param id the id
      */
-    void deleteOrderDetail(Long id);
+    void deleteOrderDetail(String id);
 }
