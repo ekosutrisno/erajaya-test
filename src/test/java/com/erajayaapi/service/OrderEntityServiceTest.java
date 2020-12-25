@@ -15,9 +15,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,11 +102,43 @@ class OrderEntityServiceTest {
     @Test
     @Order(3)
     void getDataOrderById() {
+        //Initial Example Data
+        Optional<OrderEntity> optionalOrderEntity = Optional.of(new OrderEntity(1L, "TRX-0001", "ORD-XX1", "Buy IPhone 12 Max", new Date(), "Eko C1", new Date(), "Eko M1", true));
+
+        Long orderId = 1L;
+        //Mocking Data
+        when(orderRepository.findById(orderId)).thenReturn(optionalOrderEntity);
+        Optional<OrderEntity> optionalOrder = orderService.getDataOrderById(orderId);
+
+        //Assert Condition
+        assertTrue(optionalOrder.isPresent());
+        assertEquals("ORD-XX1", optionalOrder.get().getOrderName());
+
+        //Verify
+        verify(orderRepository, times(1)).findById(orderId);
     }
 
     @Test
     @Order(4)
     void saveDataOrder() {
+        //Util
+        Long orderId = new Random().nextLong();
+
+        // Initialize example data
+        OrderEntity orderEntity = new OrderEntity(orderId, "TRX-0001", "ORD-XX1", "Buy IPhone 12 Max", new Date(), "Eko C1", new Date(), "Eko M1", true);
+
+        //Mocking
+        when(orderRepository.save(orderEntity)).thenReturn(orderEntity);
+        OrderEntity orderResult = orderService.saveDataOrder(orderEntity);
+
+        //Assert Condition
+        assertNotNull(orderResult);
+        assertEquals(orderId, orderResult.getOrderId());
+
+        //Verify
+        System.out.println(mockingDetails(orderResult).getMock());
+        verify(orderRepository, times(1)).save(orderEntity);
+
     }
 
     @Test
