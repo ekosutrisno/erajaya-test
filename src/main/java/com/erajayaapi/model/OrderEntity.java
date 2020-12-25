@@ -8,12 +8,18 @@ import javax.persistence.*;
 import java.util.Date;
 
 
+/**
+ * The type Order entity.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = OrderEntity.TABLE_NAME)
 public class OrderEntity {
+    /**
+     * The Table name.
+     */
     static final String TABLE_NAME = "t_order";
 
     @Id
@@ -39,6 +45,13 @@ public class OrderEntity {
 
     private Boolean status;
 
+    /**
+     * Instantiates a new Order entity.
+     *
+     * @param invoiceNumber    the invoice number
+     * @param orderName        the order name
+     * @param orderDescription the order description
+     */
     public OrderEntity(String invoiceNumber, String orderName, String orderDescription) {
         this.invoiceNumber = invoiceNumber;
         this.orderName = orderName;

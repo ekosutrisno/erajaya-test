@@ -7,21 +7,70 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The interface Order detail service.
+ */
 public interface OrderDetailService {
-   List<OrderDetailEntity> getALlOrderDetail();
+    /**
+     * Gets a ll order detail.
+     *
+     * @return the a ll order detail
+     */
+    List<OrderDetailEntity> getALlOrderDetail();
 
-   Page<OrderDetailEntity> getAllOrderDetailWithPagination(Pageable page);
+    /**
+     * Gets all order detail with pagination.
+     *
+     * @param page the page
+     * @return the all order detail with pagination
+     */
+    Page<OrderDetailEntity> getAllOrderDetailWithPagination(Pageable page);
 
-   OrderDetailEntity getOrderDetailById(Long id);
+    /**
+     * Gets order detail by id.
+     *
+     * @param id the id
+     * @return the order detail by id
+     */
+    OrderDetailEntity getOrderDetailById(Long id);
 
-   List<OrderDetailEntity> saveOrderDetail(List<OrderDetailEntity> orderDetail);
+    /**
+     * Save order detail list.
+     *
+     * @param orderDetail the order detail
+     * @return the list
+     */
+    List<OrderDetailEntity> saveOrderDetail(List<OrderDetailEntity> orderDetail);
 
-   List<OrderDetailEntity> findOrderDetailByOrderId(Long orderId);
+    /**
+     * Find order detail by order id list.
+     *
+     * @param orderId the order id
+     * @return the list
+     */
+    List<OrderDetailEntity> findOrderDetailByOrderId(Long orderId);
 
-   Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(Long orderId, String itemName);
+    /**
+     * Find by order id and order detail item optional.
+     *
+     * @param orderId  the order id
+     * @param itemName the item name
+     * @return the optional
+     */
+    Optional<OrderDetailEntity> findByOrderIdAndOrderDetailItem(Long orderId, String itemName);
 
+    /**
+     * Update order detail.
+     *
+     * @param id          the id
+     * @param orderDetail the order detail
+     */
+    void updateOrderDetail(Long id, OrderDetailEntity orderDetail);
 
-   OrderDetailEntity updateOrderDetail(Long id, OrderDetailEntity orderDetail);
-
-   void deleteOrderDetail(Long id);
+    /**
+     * Delete order detail.
+     *
+     * @param id the id
+     */
+    void deleteOrderDetail(Long id);
 }

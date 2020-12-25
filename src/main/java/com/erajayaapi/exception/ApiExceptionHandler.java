@@ -8,9 +8,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+/**
+ * The type Api exception handler.
+ */
 @ControllerAdvice
 public class ApiExceptionHandler {
 
+   /**
+    * Handle api request exception response entity.
+    *
+    * @param e the e
+    * @return the response entity
+    */
    @ExceptionHandler(value = {ApiRequestException.class})
    public ResponseEntity<Object> handleApiRequestException(ApiRequestException e) {
       //Payload

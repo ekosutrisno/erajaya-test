@@ -20,6 +20,9 @@ import java.util.*;
 
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * The type Order controller.
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping(path = "/api/v1/order", produces = "application/json")
@@ -32,12 +35,23 @@ public class OrderController {
     @Autowired
     private OrderDetailService orderDetailService;
 
+    /**
+     * Gets all order.
+     *
+     * @return the all order
+     */
     @GetMapping("/all-order")
     @ApiOperation(value = "Get All Order without Details", tags = {"Order"})
     public List<OrderEntity> getAllOrder() {
         return orderService.getAllOrder();
     }
 
+    /**
+     * Gets all order with pagination.
+     *
+     * @param page the page
+     * @return the all order with pagination
+     */
     @GetMapping("/page-order")
     @ApiOperation(value = "Get All Order with Details", tags = {"Order"})
     public ResponseEntity<ResponseAllPaging> getAllOrderWithPagination(Pageable page) {
@@ -73,6 +87,12 @@ public class OrderController {
         return new ResponseEntity<>(response, OK);
     }
 
+    /**
+     * Gets order by id.
+     *
+     * @param id the id
+     * @return the order by id
+     */
     @GetMapping("/{id}")
     @ApiOperation(value = "Get Single Order with Details", tags = {"Order"})
     public ResponseEntity<?> getOrderById(@PathVariable("id") Long id) {
@@ -96,6 +116,12 @@ public class OrderController {
         throw new ApiRequestException("Data not found with Id [" + id + "].");
     }
 
+    /**
+     * Create order response entity.
+     *
+     * @param request the request
+     * @return the response entity
+     */
     @PostMapping("/add-order")
     @ApiOperation(value = "Add order", notes = "orderId and orderDetailId not required, will generated automatic")
     public ResponseEntity<ResponseOrder> createOrder(@RequestBody OrderRequest request) {
@@ -136,6 +162,13 @@ public class OrderController {
                 , OK);
     }
 
+    /**
+     * Update order response entity.
+     *
+     * @param id      the id
+     * @param request the request
+     * @return the response entity
+     */
     @PutMapping("/{id}")
     @ApiOperation(value = "Update order", notes = "orderId and orderDetailId not required, will generated automatic")
     public ResponseEntity<?> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest request) {
@@ -190,6 +223,12 @@ public class OrderController {
         throw new ApiRequestException("Data not found with Id [" + id + "]. and update Failed!");
     }
 
+    /**
+     * Delete order status response entity.
+     *
+     * @param id the id
+     * @return the response entity
+     */
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete Order", notes = "Change Order Status")
     public ResponseEntity<?> deleteOrderStatus(@PathVariable("id") Long id) {
@@ -208,6 +247,12 @@ public class OrderController {
         throw new ApiRequestException("Data not found with Id [" + id + "]. and status Changed Failed!");
     }
 
+    /**
+     * Delete order detail items response entity.
+     *
+     * @param orderDetail the order detail
+     * @return the response entity
+     */
     @DeleteMapping("/delete-item")
     @ApiOperation(value = "Change Order Detail Status", tags = {"Order"})
     public ResponseEntity<?> deleteOrderDetailItems(@RequestBody OrderDetailEntity orderDetail) {

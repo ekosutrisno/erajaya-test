@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * The type Response all paging.
+ */
 @Data
 @AllArgsConstructor
 public class ResponseAllPaging {

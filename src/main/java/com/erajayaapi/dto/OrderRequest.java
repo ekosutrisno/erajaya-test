@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * The type Order request.
+ */
 @Data
 public class OrderRequest {
    private String invoiceNumber;

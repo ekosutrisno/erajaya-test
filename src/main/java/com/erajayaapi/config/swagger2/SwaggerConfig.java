@@ -16,16 +16,24 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The type Swagger config.
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
 
-    private static final Set<String> DEFAUL_REQUEST_RESPONSE = new HashSet<String>(
+    private static final Set<String> DEFAULT_REQUEST_RESPONSE = new HashSet<String>(
             Arrays.asList(
                     MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE
             )
     );
 
+    /**
+     * Swagger configuration docket.
+     *
+     * @return the docket
+     */
     @Bean
     public Docket swaggerConfiguration() {
         return new Docket(DocumentationType.SWAGGER_2).select()
@@ -34,8 +42,8 @@ public class SwaggerConfig {
                 .build().groupName("Order Service")
                 .apiInfo(apiInfo())
                 .useDefaultResponseMessages(false)
-                .produces(DEFAUL_REQUEST_RESPONSE)
-                .consumes(DEFAUL_REQUEST_RESPONSE);
+                .produces(DEFAULT_REQUEST_RESPONSE)
+                .consumes(DEFAULT_REQUEST_RESPONSE);
     }
 
     private ApiInfo apiInfo() {

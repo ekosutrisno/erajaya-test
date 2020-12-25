@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Order detail service.
+ */
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
     @Autowired
@@ -47,7 +50,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public OrderDetailEntity updateOrderDetail(Long id, OrderDetailEntity orderDetail) {
+    public void updateOrderDetail(Long id, OrderDetailEntity orderDetail) {
         Optional<OrderDetailEntity> orderDetailToEdit = orderDetailRepository.findById(id);
         if (orderDetailToEdit.isPresent()) {
             OrderDetailEntity orderDetailData = orderDetailToEdit.get();
@@ -56,10 +59,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             orderDetailData.setOrderDetailItemQuantity(orderDetail.getOrderDetailItemQuantity());
             orderDetailData.setOrderDetailMerchant(orderDetail.getOrderDetailMerchant());
 
-            return orderDetailRepository.save(orderDetailData);
+            orderDetailRepository.save(orderDetailData);
 
         }
-        return null;
     }
 
     @Override

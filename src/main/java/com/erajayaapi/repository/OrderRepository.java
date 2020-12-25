@@ -7,9 +7,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+/**
+ * The interface Order repository.
+ */
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
+    /**
+     * Find all order with pagination page.
+     *
+     * @param pageable the pageable
+     * @return the page
+     */
     @Query("select o from OrderEntity o where o.status = true")
     Page<OrderEntity> findAllOrderWithPagination(Pageable pageable);
 }

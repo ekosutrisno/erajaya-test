@@ -13,11 +13,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * The type Order service.
+ */
 @Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private final OrderRepository orderRepository;
 
+    /**
+     * Instantiates a new Order service.
+     *
+     * @param orderRepository the order repository
+     */
     public OrderServiceImpl(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
